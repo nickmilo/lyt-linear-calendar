@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Build main.js and styles.css from src/core (shared with the web app) and src/plugin.
+"""Build main.js (the shared markup as APP_HTML, core.js, ui.js, then the plugin platform) and styles.css from src/core (shared with the web app) and src/plugin.
 The core is plain JS included as source into one closure with the plugin shell, so no bundler or npm is needed.
 styles.css scopes the core's styles to the view (.lytlc) and leaves out rules Obsidian's review flags
 (!important, :has, clip-path, text-decoration, scrollbar-width, all:) and the web page's print and body rules."""
 import pathlib, re
 R=pathlib.Path(__file__).resolve().parent.parent
-core=(R/'src/core/core.js').read_text(); shell=(R/'src/plugin/shell.js').read_text()
+import json
+core='var APP_HTML='+json.dumps((R/'src/core/app.html').read_text())+';\n'+(R/'src/core/core.js').read_text()+'\n'+(R/'src/core/ui.js').read_text(); shell=(R/'src/plugin/shell.js').read_text()
 (R/'main.js').write_text('/* LYT Linear Calendar for Obsidian. GPL-3.0. Built by tools/build.py from src/core and src/plugin; edit those, not this file. */\n(function () {\n'+core+'\n'+shell+'\n})();\n')
 BANNED=re.compile(r'!important|:has\(|clip-path|text-decoration|scrollbar-width|(^|[;{\s])all\s*:')
 def scope(sel):
@@ -13,6 +14,8 @@ def scope(sel):
   if sel in (':root','html','body','html,body'): return '.lytlc'
   m=re.match(r'^(\[data-font="\w+"\])(\s+body)?(\s.*)?$',sel)
   if m: return '.lytlc'+m.group(1)+(m.group(3) or '')
+  m=re.match(r'^body((?:\.[\w-]+)+)(.*)$',sel)
+  if m: return '.lytlc'+m.group(1)+m.group(2)
   if sel.startswith('body') or ' body' in sel or sel.startswith('html'): return None
   if sel=='*': return '.lytlc *'
   m=re.match(r'^(\[data-lc-theme="\w+"\])(.*)$',sel)

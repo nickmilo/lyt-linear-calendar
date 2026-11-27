@@ -98,7 +98,7 @@ function renderYear(){
   if(S.set.view==='life'){ renderLife(); return; }
   $('year').classList.remove('life');
   hovDate=null; hovId=null;
-  var cw=document.querySelector('.day[data-date]'); if(cw&&cw.offsetWidth)COLW=cw.offsetWidth;
+  var cw=PF.root.querySelector('.day[data-date]'); if(cw&&cw.offsetWidth)COLW=cw.offsetWidth;
   if(!S.set.scroll||Y==null)Y=S.year; $('ylab').textContent=Y;
   var root=$('year');root.textContent='';
   var HALF=!!S.set.half, NC=HALF?16:31, COLS='44px repeat('+NC+',minmax(0,1fr)) '+(S.set.someMin?'34px':'150px');
@@ -186,7 +186,7 @@ function renderYear(){
     row.appendChild(so);
     root.appendChild(row);
   }); });
-  var nw=document.querySelector('.day[data-date]'); if(nw&&nw.offsetWidth)root.style.setProperty('--ho',Math.max(0,(nw.getBoundingClientRect().width/2-5.5))+'px');
+  var nw=PF.root.querySelector('.day[data-date]'); if(nw&&nw.offsetWidth)root.style.setProperty('--ho',Math.max(0,(nw.getBoundingClientRect().width/2-5.5))+'px');
   if(nw&&nw.offsetWidth&&Math.abs(nw.offsetWidth-COLW)>COLW*.15&&!renderYear.again){ renderYear.again=true; renderYear(); renderYear.again=false; }
 }
 

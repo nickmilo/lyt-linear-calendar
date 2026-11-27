@@ -1,19 +1,15 @@
 /* plugin-only styles */
-/* the view fills its pane and uses Obsidian's interface font */
-.workspace-leaf-content .view-content.lytlc{font-family:var(--font);font-size:14px;line-height:1.4;background:var(--bg);color:var(--ink);padding:12px 16px 24px;overflow:auto}
-/* Obsidian's own button look stays out of the calendar */
+/* the view fills its pane; the calendar scrolls inside it */
+.workspace-leaf-content .view-content.lytlc{font-family:var(--font);font-size:14px;line-height:1.4;background:var(--bg);color:var(--ink);padding:0;overflow:auto;position:relative}
+.workspace-leaf-content .view-content.lytlc header{padding-left:16px;padding-right:16px}
+/* the layer for pop-ups and cards: no size of its own, above the workspace */
+.lytlc.lytlc-layer{position:fixed;top:0;left:0;width:0;height:0;min-height:0;margin:0;padding:0;overflow:visible;background:none;z-index:40;font-family:var(--font);font-size:14px;line-height:1.4;color:var(--ink)}
+/* Obsidian's own button and field look stays out of the calendar */
 .lytlc button{box-shadow:none;border-radius:0;height:auto;min-height:0}
-.lytlc .lytlc-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;margin-bottom:10px}
-.lytlc .lytlc-head .brand{margin-right:4px}
-.lytlc .lytlc-head .motif{display:inline-flex;align-items:center;gap:0}
-.lytlc .lytlc-head .motif i{display:inline-block;width:14px;height:1px;background:var(--edge)}
-.lytlc .lytlc-head .yr{border-color:var(--line)}
-.lytlc .lytlc-head .yr button{display:inline-flex;align-items:center;justify-content:center;background:none;color:var(--ink)}
-.lytlc .lytlc-head .yr button:hover{background:var(--band-h)}
-.lytlc .lytlc-head #shape button{height:32px}
-.lytlc .lytlc-today{border:0;background:none;color:var(--accent);font-size:13px;font-weight:600;padding:4px 6px}
-.lytlc .lytlc-today:hover{background:var(--band-h)}
-.lytlc .lytlc-hide{visibility:hidden}
-/* the first plugin versions show the year; adding and folding come later */
-.lytlc .some .add,.lytlc .sfold{display:none}
-.lytlc .seg,.lytlc .sch{cursor:pointer}
+.lytlc input[type=text],.lytlc input:not([type]),.lytlc textarea,.lytlc select{box-shadow:none;border-radius:0}
+/* the vault is the data: no import here */
+.lytlc #setbar [data-tab=data],.lytlc #importInput{display:none}
+/* drag cursors, without the web app's important flags (Obsidian's review flags them) */
+.lytlc.moving,.lytlc.moving *{cursor:grabbing}
+.lytlc.alt .seg,.lytlc.alt .sch,.lytlc.alt.moving,.lytlc.alt.moving *{cursor:copy}
+.lytlc.resizing,.lytlc.resizing *{cursor:ew-resize}
