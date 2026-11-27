@@ -1,0 +1,8 @@
+/* plugin-only styles: the view fills its pane and uses Obsidian's interface font */
+.lytlc{font-family:var(--font-interface);font-size:14px;line-height:1.4;background:var(--bg);color:var(--ink);padding:12px 16px 24px;overflow:auto}
+.lytlc .lytlc-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.lytlc .lytlc-head button{width:30px;height:30px;padding:0;font-size:16px}
+.lytlc .lytlc-year{font-weight:700;font-size:16px;color:var(--title);min-width:48px;text-align:center}
+/* the first plugin version shows the year; adding and folding come later */
+.lytlc .some .add,.lytlc .sfold{display:none}
+.lytlc .seg,.lytlc .sch{cursor:pointer}

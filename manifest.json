@@ -1,0 +1,10 @@
+{
+  "id": "lyt-linear-calendar",
+  "name": "LYT Linear Calendar",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "See your whole year as a linear calendar, built from your plans and reflections as Markdown notes.",
+  "author": "Linking Your Thinking",
+  "authorUrl": "https://www.linkingyourthinking.com",
+  "isDesktopOnly": false
+}
