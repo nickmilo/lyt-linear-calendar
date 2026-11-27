@@ -6,10 +6,14 @@
   --weekend:#e6dbd1; --soft:#e6dbd1; --accent:#1a7da4; --accent-ink:#ffffff; --sel:rgba(26,125,164,.11); --band:rgba(26,125,164,.16); --band-h:rgba(26,125,164,.07);}
 .lytlc[data-lc-theme="dark"]{--edge:hsl(225,14%,40%); --bg:hsl(225,12%,20%); --ink:hsl(191,54%,64%); --title:hsl(59,81%,47%); --muted:hsl(224,17%,68%); --faint:hsl(224,17%,68%); --line:hsl(225,18%,27%); --hair:hsl(225,14%,24%);
   --weekend:hsl(231,9%,16.5%); --soft:hsl(231,9%,15%); --accent:hsl(58,86%,66%); --accent-ink:hsl(225,12%,16%); --sel:hsla(58,86%,66%,.13); --band:hsla(58,86%,66%,.15); --band-h:hsla(58,86%,66%,.06); color-scheme:dark;}
+.lytlc[data-font="atkinson"]{--font:'Atkinson Hyperlegible Next', system-ui, sans-serif;}
+.lytlc[data-font="familjen"]{--font:'Familjen Grotesk', system-ui, sans-serif;}
 .lytlc *{box-sizing:border-box}
 .lytlc,.lytlc{margin:0;background:var(--bg);color:var(--ink)}
 .lytlc{font-family:var(--font);font-size:14px;line-height:1.4}
+.lytlc[data-font="recursive"]{font-variation-settings:'CASL' 1}
 .lytlc .num{font-variant-numeric:tabular-nums}
+.lytlc[data-font="recursive"] .num{font-variation-settings:'CASL' .4,'MONO' 1}
 .lytlc button,.lytlc input,.lytlc select,.lytlc textarea{font-family:inherit;font-size:inherit;color:inherit}
 .lytlc button{cursor:pointer;background:var(--bg);border:1px solid var(--edge);padding:7px 11px;line-height:1.2}
 .lytlc button:focus-visible,.lytlc input:focus-visible,.lytlc textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
@@ -332,15 +336,8 @@
 .lytlc .setdd .body>.fld:first-child{border-top:0;margin-top:6px}
 .lytlc .setdd .fld>.l,.lytlc .setdd .fld>label.sl{font-size:14px;font-weight:800;color:var(--title)}
 /* plugin-only styles */
-/* Match Obsidian: the calendar takes the current theme's colours */
-.lytlc[data-lc-theme="obsidian"]{
-  --bg:var(--background-primary); --edge:var(--text-muted); --ink:var(--text-normal); --title:var(--text-normal);
-  --muted:var(--text-muted); --faint:var(--text-faint); --line:var(--background-modifier-border); --hair:var(--background-modifier-border);
-  --weekend:var(--background-secondary); --soft:var(--background-secondary);
-  --accent:var(--interactive-accent); --accent-ink:var(--text-on-accent);
-  --sel:color-mix(in srgb,var(--interactive-accent) 9%,transparent); --band:color-mix(in srgb,var(--interactive-accent) 16%,transparent); --band-h:color-mix(in srgb,var(--interactive-accent) 7%,transparent)}
 /* the view fills its pane and uses Obsidian's interface font */
-.workspace-leaf-content .view-content.lytlc{font-family:var(--font-interface);font-size:14px;line-height:1.4;background:var(--bg);color:var(--ink);padding:12px 16px 24px;overflow:auto}
+.workspace-leaf-content .view-content.lytlc{font-family:var(--font);font-size:14px;line-height:1.4;background:var(--bg);color:var(--ink);padding:12px 16px 24px;overflow:auto}
 /* Obsidian's own button look stays out of the calendar */
 .lytlc button{box-shadow:none;border-radius:0;height:auto;min-height:0}
 .lytlc .lytlc-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;margin-bottom:10px}

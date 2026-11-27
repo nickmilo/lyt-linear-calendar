@@ -3,7 +3,7 @@
 var obsidian = require('obsidian');
 var VIEW_TYPE = 'lyt-linear-calendar';
 var S = { year: new Date().getFullYear(), notes: [], years: {}, cats: JSON.parse(JSON.stringify(DEF_CATS)), hidden: [], trends: [],
-  set: { weekends: true, past: true, ghost: true, view: 'year', colors: 'obsidian', half: false } };
+  set: { weekends: true, past: true, ghost: true, view: 'year', theme: 'auto', font: 'recursive', half: false } };
 var EX = { year: true, past: true }, COLW = 34, drag = null, pickedId = null, LD = null, hovDate = null, hovId = null;
 var PLUGIN = null;
 
@@ -36,9 +36,11 @@ function readVault(app) {
   });
   S.notes = notes;
 }
-/* colours: Match Obsidian (the current theme's own colours) by default, or one of the web app's themes */
-function themeFor() { return S.set.colors && S.set.colors !== 'obsidian' ? S.set.colors : 'obsidian'; }
-function redrawAll() { if (!PLUGIN) return; PLUGIN.app.workspace.getLeavesOfType(VIEW_TYPE).forEach(function (l) { if (l.view && l.view.draw) { l.view.contentEl.setAttr('data-lc-theme', themeFor()); l.view.draw(); } }); }
+/* the web app's themes and fonts. Auto: Play when Obsidian is light, LYT Mode when it is dark */
+function themeFor() { var t = S.set.theme; if (t === 'play' || t === 'paper' || t === 'dark') return t; return document.body.classList.contains('theme-dark') ? 'dark' : 'play'; }
+function dress(c) { c.setAttr('data-lc-theme', themeFor()); c.setAttr('data-font', S.set.font || 'recursive'); }
+var FONT_URL = 'https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap';
+function redrawAll() { if (!PLUGIN) return; PLUGIN.app.workspace.getLeavesOfType(VIEW_TYPE).forEach(function (l) { if (l.view && l.view.draw) { dress(l.view.contentEl); l.view.draw(); } }); }
 var ICON_PREV = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
 var ICON_NEXT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
 
@@ -49,7 +51,7 @@ class LinearCalendarView extends obsidian.ItemView {
   getIcon() { return 'calendar-range'; }
   async onOpen() {
     var self = this, c = this.contentEl;
-    c.empty(); c.addClass('lytlc'); c.setAttr('data-lc-theme', themeFor());
+    c.empty(); c.addClass('lytlc'); dress(c);
     var hd = c.createDiv({ cls: 'lytlc-head' });
     var brand = hd.createDiv({ cls: 'brand' }); var mo = brand.createEl('span', { cls: 'motif' }); mo.appendChild(mk('c v')); mo.appendChild(el('i')); mo.appendChild(mk('m'));
     var yr = hd.createDiv({ cls: 'yr' });
@@ -75,6 +77,7 @@ class LinearCalendarView extends obsidian.ItemView {
     this.registerEvent(this.app.metadataCache.on('changed', later));
     this.registerEvent(this.app.vault.on('delete', later));
     this.registerEvent(this.app.vault.on('rename', later));
+    this.registerEvent(this.app.workspace.on('css-change', function () { dress(c); }));
     mkDefs(); this.draw();
   }
   draw() { readVault(this.app); renderYear(); if (this.shapeSync) this.shapeSync(); }
@@ -87,13 +90,15 @@ class LinearCalendarPlugin extends obsidian.Plugin {
     var d = (await this.loadData()) || {};
     if (d.cats) S.cats = d.cats; if (d.hidden) S.hidden = d.hidden; if (d.year) S.year = d.year;
     if (d.set) Object.keys(d.set).forEach(function (k) { S.set[k] = d.set[k]; });
-    S.set.view = 'year'; S.set.scroll = false;
+    S.set.view = 'year'; S.set.scroll = false; if (S.set.colors) delete S.set.colors;
+    if (!document.getElementById('lytlc-fonts')) { var lk = document.createElement('link'); lk.id = 'lytlc-fonts'; lk.rel = 'stylesheet'; lk.href = FONT_URL; document.head.appendChild(lk); }
     var self = this;
     this.registerView(VIEW_TYPE, function (leaf) { return new LinearCalendarView(leaf, self); });
     this.addRibbonIcon('calendar-range', 'Open linear calendar', function () { self.open(); });
     this.addCommand({ id: 'open', name: 'Open linear calendar', callback: function () { self.open(); } });
     this.addSettingTab(new LinearCalendarSettings(this.app, this));
   }
+  onunload() { var lk = document.getElementById('lytlc-fonts'); if (lk) lk.remove(); }
   async open() {
     var ws = this.app.workspace, leaf = ws.getLeavesOfType(VIEW_TYPE)[0];
     if (!leaf) { leaf = ws.getLeaf(true); await leaf.setViewState({ type: VIEW_TYPE, active: true }); }
@@ -105,8 +110,10 @@ class LinearCalendarSettings extends obsidian.PluginSettingTab {
   display() {
     var c = this.containerEl; c.empty();
     function set(k, v) { S.set[k] = v; save(); redrawAll(); }
-    new obsidian.Setting(c).setName('Colours').setDesc('Match Obsidian uses your current theme. The others are the web app\u2019s themes.')
-      .addDropdown(function (d) { d.addOption('obsidian', 'Match Obsidian').addOption('play', 'Play').addOption('paper', 'Soft Paper').addOption('dark', 'LYT Mode').setValue(themeFor()).onChange(function (v) { set('colors', v); }); });
+    new obsidian.Setting(c).setName('Theme').setDesc('Auto uses Play when Obsidian is light and LYT Mode when it is dark.')
+      .addDropdown(function (d) { d.addOption('auto', 'Auto').addOption('play', 'Play').addOption('paper', 'Soft Paper').addOption('dark', 'LYT Mode').setValue(S.set.theme || 'auto').onChange(function (v) { set('theme', v); }); });
+    new obsidian.Setting(c).setName('Font').setDesc('Loaded from Google Fonts; without a connection the calendar uses your system font.')
+      .addDropdown(function (d) { d.addOption('recursive', 'Recursive').addOption('atkinson', 'Atkinson Hyperlegible Next').addOption('familjen', 'Familjen Grotesk').setValue(S.set.font || 'recursive').onChange(function (v) { set('font', v); }); });
     new obsidian.Setting(c).setName('Shade weekends').addToggle(function (t) { t.setValue(S.set.weekends !== false).onChange(function (v) { set('weekends', v); }); });
     new obsidian.Setting(c).setName('Fade past events').setDesc('Items that have ended draw lighter.').addToggle(function (t) { t.setValue(!!S.set.past).onChange(function (v) { set('past', v); }); });
     new obsidian.Setting(c).setName('Condensed').setDesc('Names on the line instead of above it.').addToggle(function (t) { t.setValue(!!S.set.condensed).onChange(function (v) { set('condensed', v); }); });

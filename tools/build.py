@@ -11,11 +11,12 @@ BANNED=re.compile(r'!important|:has\(|clip-path|text-decoration|scrollbar-width|
 def scope(sel):
   sel=sel.strip()
   if sel in (':root','html','body','html,body'): return '.lytlc'
+  m=re.match(r'^(\[data-font="\w+"\])(\s+body)?(\s.*)?$',sel)
+  if m: return '.lytlc'+m.group(1)+(m.group(3) or '')
   if sel.startswith('body') or ' body' in sel or sel.startswith('html'): return None
   if sel=='*': return '.lytlc *'
   m=re.match(r'^(\[data-lc-theme="\w+"\])(.*)$',sel)
   if m: return '.lytlc'+m.group(1)+m.group(2)
-  if sel.startswith('[data-font'): return None
   return '.lytlc '+sel
 def rules(css):
   i=0; out=[]

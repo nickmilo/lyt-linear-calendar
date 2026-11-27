@@ -2,7 +2,11 @@
 
 A linear calendar for Obsidian, by [Linking Your Thinking](https://www.linkingyourthinking.com). See your whole year at a glance, built on plain Markdown notes.
 
-**Status:** in development (0.1.0). The year view draws every note that has a `start` date (or a `month`, for Sometime plans) and opens a note when you click it. Adding, moving and editing come next, along with Life Trends.
+**Status:** in development (0.1.2). The year view draws every note that has a `start` date (or a `month`, for Sometime plans) and opens a note when you click it. Adding, moving and editing come next, along with Life Trends.
+
+## Network use
+
+The calendar's three fonts (Recursive, Atkinson Hyperlegible Next, Familjen Grotesk) load from Google Fonts. Without a connection it uses your system font. Nothing else leaves your vault.
 
 ## The notes
 

@@ -1,13 +1,6 @@
 /* plugin-only styles */
-/* Match Obsidian: the calendar takes the current theme's colours */
-.lytlc[data-lc-theme="obsidian"]{
-  --bg:var(--background-primary); --edge:var(--text-muted); --ink:var(--text-normal); --title:var(--text-normal);
-  --muted:var(--text-muted); --faint:var(--text-faint); --line:var(--background-modifier-border); --hair:var(--background-modifier-border);
-  --weekend:var(--background-secondary); --soft:var(--background-secondary);
-  --accent:var(--interactive-accent); --accent-ink:var(--text-on-accent);
-  --sel:color-mix(in srgb,var(--interactive-accent) 9%,transparent); --band:color-mix(in srgb,var(--interactive-accent) 16%,transparent); --band-h:color-mix(in srgb,var(--interactive-accent) 7%,transparent)}
 /* the view fills its pane and uses Obsidian's interface font */
-.workspace-leaf-content .view-content.lytlc{font-family:var(--font-interface);font-size:14px;line-height:1.4;background:var(--bg);color:var(--ink);padding:12px 16px 24px;overflow:auto}
+.workspace-leaf-content .view-content.lytlc{font-family:var(--font);font-size:14px;line-height:1.4;background:var(--bg);color:var(--ink);padding:12px 16px 24px;overflow:auto}
 /* Obsidian's own button look stays out of the calendar */
 .lytlc button{box-shadow:none;border-radius:0;height:auto;min-height:0}
 .lytlc .lytlc-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;margin-bottom:10px}
